@@ -1,6 +1,9 @@
+/** Author: M S Sharath  */
+/** Software Engineer */
+
 import logo from "./logo.svg";
 import "./App.css";
-import Carousel from "./carousel/Carousel";
+import Carousel from "./components/carousel/Carousel";
 
 function App() {
   return (

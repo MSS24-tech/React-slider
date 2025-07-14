@@ -1,3 +1,6 @@
+/** Author: M S Sharath  */
+/** Software Engineer */
+
 import slide1 from "./image1.jpg";
 import slide2 from "./image2.jpg";
 import slide3 from "./image3.jpg";

@@ -1,11 +1,13 @@
-/* Main container */
+/** Author: M S Sharath */
+/** Software Engineer */
+
 .slide-container {
   position: relative;
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
   padding: 0;
-  overflow: visible; /* Ensure slides aren't clipped */
+  overflow: visible;
 }
 
 /* Slide wrapper */

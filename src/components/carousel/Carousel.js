@@ -1,9 +1,12 @@
+/** Author: M S Sharath  */
+/** Software Engineer */
+
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 import "./Carousel.css";
 
-import slideImages from "../assets/images/index";
+import slideImages from "../../assets/images/index";
 
 export default function Carousel() {
   const [activeIndex, setActiveIndex] = useState(0);
