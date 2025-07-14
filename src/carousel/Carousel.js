@@ -40,7 +40,7 @@ export default function Carousel() {
     <div className="slide-container" aria-label="Image carousel">
       <Slide
         ref={slideRef}
-        autoplay={true}
+        autoplay={false} //Optional
         duration={3000}
         transitionDuration={500}
         arrows={true}
