@@ -1,21 +1,33 @@
-/** Author: M S Sharath  */
+/** Author: M S Sharath */
 /** Software Engineer */
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import { Slide } from "react-slideshow-image";
+import throttle from "lodash.throttle";
 import "react-slideshow-image/dist/styles.css";
 import "./Carousel.css";
-
 import slideImages from "../../assets/images/index";
 
 export default function Carousel() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [liveMessage, setLiveMessage] = useState("");
   const slideRef = useRef(null);
   const slideCount = slideImages.length;
+
+  const goToNextSlide = useCallback(() => {
+    const nextIndex = (activeIndex + 1) % slideCount;
+    slideRef.current?.goTo(nextIndex);
+  }, [activeIndex, slideCount]);
+
   const handleKeyDown = useCallback(
     (e) => {
       if (!slideRef.current) return;
-
       switch (e.key) {
         case "ArrowLeft":
           slideRef.current.goBack();
@@ -25,58 +37,100 @@ export default function Carousel() {
           break;
         case "Enter":
         case "Tab":
-          slideRef.current.goTo((activeIndex + 1) % slideCount);
+          goToNextSlide();
           break;
         default:
           break;
       }
     },
-    [activeIndex, slideCount]
+    [goToNextSlide]
+  );
+
+  const throttledKeyDown = useMemo(
+    () => throttle(handleKeyDown, 200),
+    [handleKeyDown]
   );
 
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
+    window.addEventListener("keydown", throttledKeyDown);
+    return () => window.removeEventListener("keydown", throttledKeyDown);
+  }, [throttledKeyDown]);
+
+  const handleSlideChange = useCallback(
+    (_, newIndex) => {
+      if (newIndex !== activeIndex) {
+        const { caption } = slideImages[newIndex];
+        setActiveIndex(newIndex);
+        setLiveMessage(`Slide ${newIndex + 1} of ${slideCount}: ${caption}`);
+      }
+    },
+    [activeIndex, slideCount]
+  );
+
+  const prevArrow = useMemo(
+    () => (
+      <button className="custom-arrow" aria-label="Previous slide">
+        ❮
+      </button>
+    ),
+    []
+  );
+
+  const nextArrow = useMemo(
+    () => (
+      <button className="custom-arrow" aria-label="Next slide">
+        ❯
+      </button>
+    ),
+    []
+  );
+
+  const slides = useMemo(
+    () =>
+      slideImages.map(({ url, caption }, index) => (
+        <div
+          key={index}
+          className={`each-slide ${
+            index === activeIndex ? "active-slide" : ""
+          }`}
+          tabIndex="0"
+          role="group"
+          aria-roledescription="slide"
+          aria-label={`Slide ${index + 1} of ${slideCount}`}
+        >
+          <img
+            src={url}
+            alt={caption || `Slide ${index + 1}`}
+            loading="lazy"
+            decoding="async"
+            fetchpriority={index === 0 ? "high" : "low"}
+          />
+          {caption && <p>{caption}</p>}
+        </div>
+      )),
+    [activeIndex, slideCount]
+  );
 
   return (
-    <div className="slide-container" aria-label="Image carousel">
+    <div className="slide-container" aria-label="Image carousel" role="region">
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {liveMessage}
+      </div>
+
       <Slide
         ref={slideRef}
-        autoplay={false} //Optional
+        autoplay={true}
         duration={3000}
         transitionDuration={500}
-        arrows={true}
-        pauseOnHover={true}
-        canSwipe={true}
         infinite={true}
-        onChange={(_, newIndex) => setActiveIndex(newIndex)}
-        prevArrow={
-          <button className="custom-arrow" aria-label="Previous slide">
-            ❮
-          </button>
-        }
-        nextArrow={
-          <button className="custom-arrow" aria-label="Next slide">
-            ❯
-          </button>
-        }
+        arrows={true}
+        canSwipe={true}
+        pauseOnHover={false}
+        onChange={handleSlideChange}
+        prevArrow={prevArrow}
+        nextArrow={nextArrow}
       >
-        {slideImages.map((slide, index) => (
-          <div
-            key={index}
-            className={`each-slide ${
-              index === activeIndex ? "active-slide" : ""
-            }`}
-            tabIndex="0"
-            role="group"
-            aria-roledescription="slide"
-            aria-label={`Slide ${index + 1} of ${slideCount}`}
-          >
-            <img src={slide.url} alt={slide.caption} loading="lazy" />
-            <p>{slide.caption}</p>
-          </div>
-        ))}
+        {slides}
       </Slide>
     </div>
   );

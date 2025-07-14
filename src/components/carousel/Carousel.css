@@ -1,98 +1,54 @@
-/** Author: M S Sharath */
-/** Software Engineer */
-
 .slide-container {
-  position: relative;
   width: 100%;
   max-width: 900px;
-  margin: 0 auto;
-  padding: 0;
-  overflow: visible;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Slide wrapper */
 .each-slide {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   outline: none;
-  transition: border 0.3s ease, transform 0.3s ease;
-  border: 2px solid transparent;
-  border-radius: 10px;
-  box-sizing: border-box;
-  padding: 15px;
-  background-color: white;
+  opacity: 0.6;
+  transition: opacity 0.5s ease-in-out, transform 0.3s ease-in-out;
+  transform: translateZ(0);
+  will-change: transform, opacity;
 }
 
-/* Active slide styles */
 .active-slide {
+  opacity: 1;
   border: 3px solid black;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  background-color: #f5f5f5;
 }
 
-/* Slide image */
 .each-slide img {
   width: 100%;
-  max-height: 400px;
-  object-fit: contain;
-  border-radius: 8px;
+  height: auto;
   display: block;
+  border-radius: 12px;
 }
 
-/* Slide caption */
-.each-slide p {
-  margin-top: 12px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
-  text-align: center;
-}
-
-/* Custom arrow buttons */
 .custom-arrow {
-  background-color: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   color: white;
+  font-size: 24px;
   border: none;
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  font-size: 22px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-}
-
-/* Previous arrow on the left */
-.custom-arrow[aria-label="Previous slide"] {
-  left: 10px;
-}
-
-/* Next arrow on the right */
-.custom-arrow[aria-label="Next slide"] {
-  right: 10px;
+  z-index: 1;
+  transition: background 0.3s;
 }
 
 .custom-arrow:hover {
-  background-color: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.7);
 }
 
-/* Responsive tweaks */
-@media (max-width: 768px) {
-  .each-slide img {
-    max-height: 300px;
-  }
-
-  .custom-arrow {
-    width: 35px;
-    height: 35px;
-    font-size: 18px;
-  }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
