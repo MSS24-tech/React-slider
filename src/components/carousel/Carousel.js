@@ -54,7 +54,7 @@ export default function Carousel() {
         duration={3000}
         transitionDuration={500}
         infinite={true}
-        arrows={false}
+        arrows={true}
         canSwipe={true}
         pauseOnHover={false}
         onChange={handleSlideChange}
@@ -64,22 +64,26 @@ export default function Carousel() {
         {slideImages.map(({ url, caption }, index) => (
           <div
             key={index}
-            className={`each-slide ${
-              index === activeIndex ? "active-slide" : ""
-            }`}
+            className="each-slide"
             tabIndex="0"
             role="group"
             aria-roledescription="slide"
             aria-label={`Slide ${index + 1} of ${slideCount}`}
           >
-            <img
-              src={url}
-              alt={caption || `Slide ${index + 1}`}
-              loading="lazy"
-              decoding="async"
-              fetchpriority={index === 0 ? "high" : "low"}
-            />
-            {caption && <p>{caption}</p>}
+            <div
+              className={`slide-inner ${
+                index === activeIndex ? "active-slide" : ""
+              }`}
+            >
+              <img
+                src={url}
+                alt={caption || `Slide ${index + 1}`}
+                loading="lazy"
+                decoding="async"
+                fetchpriority={index === 0 ? "high" : "low"}
+              />
+              {caption && <p>{caption}</p>}
+            </div>
           </div>
         ))}
       </Slide>
